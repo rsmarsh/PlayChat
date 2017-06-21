@@ -1,0 +1,17 @@
+#chatList {
+	background-color: silver;
+	border-style: solid;
+	border-color: black;
+	overflow-y:auto;
+	height: 50vh;
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+}
+
+.chatMessage {
+	background-color: white;	
+	padding-top: 1vh;
+	padding-bottom: 2vh;
+
+}
