@@ -9,11 +9,12 @@ function sendUsernameToServer(username) {
 	socket.emit('editUsername', username);
 };
 
+//split into an object
 socket.on('newMessage', function(message, usernameFrom) {
 	newMessageFromServer(message, usernameFrom);
 });
 
-socket.on('totalUsersUpdate', function(newCount) {
-	updateTotalUserCount(newCount);
+socket.on('totalUsersUpdate', function(userCount) {
+	updateTotalUserCount(userCount);
 });
 

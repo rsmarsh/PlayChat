@@ -3,6 +3,11 @@ var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 
+var utils = require('./utils');
+
+
+
+
 var usernameList = {};
 var totalUsers = 0;
 var currentActiveUsers = 0;
@@ -31,7 +36,13 @@ io.on('connection', function (socket) {
 	currentActiveUsers+=1;
 	console.log("new connection");
 	socket.username = 'guest'+totalUsers;
-	io.emit('totalUsersUpdate', currentActiveUsers);
+	
+	var userCountUpdate = {
+		currentActiveUsers: currentActiveUsers,
+		totalUsers: totalUsers
+	};
+	
+	io.emit('totalUsersUpdate', userCountUpdate);
 
 	socket.on('disconnect', function () {
 		console.log("client disconnected");
@@ -46,8 +57,23 @@ io.on('connection', function (socket) {
 
 	});
 
+	//registration attempt made
+	socket.on('registration', function(newUser) {
+		//new user registration attempt, check first if the username is already taken
+		dbComms.registration(newUser);
+	});
+
+	//log in attempt made
+	socket.on('login', function(logIn) {
+
+	});
+
+
+
+
 	//text message from clients
 	socket.on('chatMessage', function (message) {
+		
 		io.emit('newMessage', message, this.username);
 
 	});

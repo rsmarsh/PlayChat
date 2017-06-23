@@ -1,7 +1,7 @@
 //handles clientside game interaction
 var chatList = document.getElementById('chatList');
 var activeUsers = document.getElementById('activeUserCount');
-
+var totalUsers = document.getElementById('totalUserCount')
 
 function prepareHandlers() {
 	var textInput = document.getElementById('input-box');
@@ -26,7 +26,8 @@ function prepareHandlers() {
 };
 
 function updateTotalUserCount(newCount) {
-	activeUsers.innerHTML = newCount;
+	activeUsers.innerHTML = newCount.currentActiveUsers;
+	totalUsers.innerHTML = newCount.totalUsers;
 };
 
 
