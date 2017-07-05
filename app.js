@@ -15,6 +15,7 @@ var socketIOAuth = require('./private/socketio-auth');
 
 
 var usernameList = {};
+var publicUserList = [];
 var totalUsers = 0;
 var currentActiveUsers = 0;
 
@@ -89,6 +90,11 @@ io.on('connection', function (socket) {
 	currentActiveUsers+=1;
 	console.log("new connection");
 	socket.username = 'guest'+totalUsers;
+	usernameList[socket.id] = socket.username;
+	publicUserList.push(socket.username);
+
+
+
 
 	if (typeof socket.avatar === 'undefined') {
 		socket.avatar = "default.png";
@@ -105,17 +111,25 @@ io.on('connection', function (socket) {
 	//inform all users of a new connection
 	io.emit('totalUsersUpdate', userCountUpdate);
 
+	//update the user history list to allowe population of the web list
+	io.emit('userHistory', publicUserList);
+
 	socket.on('disconnect', function () {
-		console.log("client disconnected");
+		console.log(socket.username+" disconnected");
+		publicUserList.splice(publicUserList.indexOf(socket.username), 1);
 		currentActiveUsers-=1;
 		io.emit('totalUsersUpdate', currentActiveUsers);
+		io.emit('userHistory', publicUserList);
 	})
 	
 	socket.on('editUsername', function (newUsername) {
 
-		usernameList[this.id] = newUsername;
-		this.username = newUsername;
-		socket.emit('usernameToDisplay', this.username);
+		usernameList[socket.id] = newUsername;
+		publicUserList[publicUserList.indexOf(socket.username)] = newUsername;
+		socket.username = newUsername;
+
+		socket.emit('usernameToDisplay', socket.username);
+		io.emit('userHistory', publicUserList);
 
 	});
 

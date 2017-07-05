@@ -75,6 +75,11 @@
     font-weight: bold;
 }
 
+#userHistoryList {
+	float: right;
+	border-width: 1px black;
+}
+
 .close:hover,
 .close:focus {
     color: black;

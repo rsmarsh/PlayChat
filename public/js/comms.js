@@ -19,6 +19,10 @@ socket.on('totalUsersUpdate', function(userCount) {
 	updateTotalUserCount(userCount);
 });
 
+socket.on('userHistory', function(usernameList) {
+	updateUserHistory(usernameList);
+});
+
 socket.on('usernameToDisplay', function(usernameToDisplay) {
 	changeDisplayedUsername(usernameToDisplay);
 });

@@ -33,6 +33,7 @@ function prepareHandlers() {
 	var closeButton = document.getElementsByClassName("close")[0];
 	var avatar = document.getElementById("mainProfileAvatar");
 	var avatarUploadForm = document.getElementById('imageUploadForm');
+	var userHistoryList = document.getElementById('userHistoryList');
 
 	avatarUploadForm.onsubmit = function(e) {
 		e.preventDefault();
@@ -67,6 +68,22 @@ function prepareHandlers() {
 function updateTotalUserCount(newCount) {
 	activeUsers.innerHTML = newCount.currentActiveUsers;
 	totalUsers.innerHTML = newCount.totalUsers;
+};
+
+function updateUserHistory(userList) {
+	var userListHTML = '';
+	if (userList.length > 0) {
+		var userListHTML = '<h2>Users in the chat:</h2>';
+		userListHTML += '<ul>';
+		for (var i = 0; i < userList.length; i++) {
+			userListHTML += '<li>';
+			userListHTML += userList[i]; 
+			userListHTML += '</li>';
+		}
+		userListHTML += '</ul>';
+	} 
+	
+		userHistoryList.innerHTML = userListHTML;
 };
 
 
