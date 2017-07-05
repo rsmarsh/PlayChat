@@ -120,7 +120,7 @@ io.on('connection', function (socket) {
 		currentActiveUsers-=1;
 		io.emit('totalUsersUpdate', currentActiveUsers);
 		io.emit('userHistory', publicUserList);
-	})
+	});
 	
 	socket.on('editUsername', function (newUsername) {
 

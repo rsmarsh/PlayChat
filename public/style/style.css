@@ -76,6 +76,8 @@
 }
 
 #userHistoryList {
+	margin-left: 1em;
+	margin-right: 1em;
 	float: right;
 	border-width: 1px black;
 }
