@@ -15,21 +15,51 @@
 </div>
 
 <div id="InputForm">
-	<input type="text" id="input-box" placeholder="Type your message here...">
+	<input type="text" id="input-box" placeholder="Type your message here..."/>
 	<button id="send-button" onclick="sendMessage()">Send</button>
 </div>
 
 <div id = "InputForm">
-	<input type="text" id="username-box" placeholder="Enter a username">
+	<input type="text" id="username-box" placeholder="Enter a username"/>
 	<button id="username-button" onclick="changeUsername()">Change</button>
 	
 </div>
 
-<div>
-	<h2>Current active users: <span id="activeUserCount"></span></h2>
-	<h2>Total users: <span id="totalUserCount"></span></h2>
+<div id="profileBox">
+	<img class="profileImage smallImage" id="mainProfileAvatar" src="users/avatars/default.png"/>
+
+	<h2>Welcome <span id="usernameDisplay"></span></h2>
+
+	<button id="openAvatarUploadMenu">Upload Avatar</button>
+
 </div>
+
+
+<div>
+	<h3>Currently active users: <span id="activeUserCount"></span></h3>
+	<h3>Total users since launch: <span id="totalUserCount"></span></h3>
+</div>
+
+
+
+<!-- modal popup avatar uploader -->
+<div id="uploadPopUp" class="modalContent">
+
+	<div class="modalDiv">
+		<span class="close">&times;</span>
+		<img class="profileImage largeImage"/></br>
+		<form id="imageUploadForm">
+		<input type="file" name="formImage" id="avatarFile"> <button type="submit">Upload</button>
+		</form>
+		<p>Drag and drop an image here or click the upload button.</p>
+		<p>Your avatar will be 128x128 pixels in size.</p>
+
+	</div>
+	
+</div>
+
 	<script src="/socket.io/socket.io.js"></script>
+	<script src="js/socket.io-file-client.js"></script>
 	<script src="js/comms.js"></script>
 	<script src="js/game.js"></script>
 </body>

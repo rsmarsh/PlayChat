@@ -1,7 +1,13 @@
 //handles clientside game interaction
 var chatList = document.getElementById('chatList');
 var activeUsers = document.getElementById('activeUserCount');
-var totalUsers = document.getElementById('totalUserCount')
+var totalUsers = document.getElementById('totalUserCount');
+var avatarUploadMenu = document.getElementById('uploadPopUp');
+
+var userInfo = {
+	username: '',
+	avatar: 'default.png'
+};
 
 function prepareHandlers() {
 	var textInput = document.getElementById('input-box');
@@ -22,6 +28,39 @@ function prepareHandlers() {
 		}
 
 	});
+
+	var openAvatarMenu = document.getElementById("openAvatarUploadMenu");
+	var closeButton = document.getElementsByClassName("close")[0];
+	var avatar = document.getElementById("mainProfileAvatar");
+	var avatarUploadForm = document.getElementById('imageUploadForm');
+
+	avatarUploadForm.onsubmit = function(e) {
+		e.preventDefault();
+		uploadNewAvatar();
+	};
+
+	//update all of the avatars on the page to be the user's avatar
+	updateAvatar(userInfo.avatar);
+
+
+	//When the user clicks on the button, open the avatar upload modal menu 
+	openAvatarMenu.onclick = function() {
+    	avatarUploadMenu.style.display = "block";
+	}
+
+	
+	closeButton.onclick = function() {
+		closeAvatarUploadMenu();
+	}
+
+	// When the user clicks anywhere outside of the modal, close it
+	window.onclick = function(event) {
+	    if (event.target == avatarUploadMenu) {
+	    	closeAvatarUploadMenu();
+	    }
+	}
+
+
 
 };
 
@@ -56,21 +95,95 @@ function changeUsername() {
 	}
 };
 
+function changeDisplayedUsername(newUsername) {
+	userInfo.username = newUsername;
+	var usernameDisplayed = document.getElementById('usernameDisplay');
+	usernameDisplayed.innerHTML = userInfo.username;
+};
+
 //new message from server
-function newMessageFromServer(message, usernameFrom) {
+function newMessageFromServer(message, usernameFrom, avatar) {
+
+	//generate new chat element and add it to the chatbox
+	var newChatMessage = createChatMessage(message, usernameFrom, avatar);
+	chatList.appendChild(newChatMessage);
+
+	//scroll down the chat to the new message
+	chatList.scrollTop = chatList.scrollHeight;
+};
+
+function createChatMessage(message, usernameFrom, avatar) {
+
+	var userAvatar = document.createElement("img");
+	userAvatar.className = 'messageImg';
+	userAvatar.src = 'users/avatars/' + avatar;
 
 	var newMessage = document.createElement("li");
 	newMessage.classList.add("chatMessage");
 
 	var messageContent = usernameFrom += ': ' + message;
 	
-	var textInsert = document.createTextNode(messageContent);
+	var textInsert = document.createElement("p");
+	textInsert.className = "chatMessageSpan"; 
+	textInsert.innerHTML = messageContent;
 
-	//add it to the new li element
+
+	newMessage.appendChild(userAvatar);
 	newMessage.appendChild(textInsert);
-		
+	
 	//add it to the chat
-	chatList.appendChild(newMessage);
+	return newMessage;
+	
 
-	chatList.scrollTop = chatList.scrollHeight;
 };
+
+function closeAvatarUploadMenu() {
+	avatarUploadMenu.style.display = "none";
+
+	//reset the upload form and remove the selected file from the form
+	document.getElementById('avatarFile').value = "";
+};
+
+function updateAvatar(newImage) {
+	userInfo.avatar = newImage;
+	var avatarImages = document.getElementsByClassName("profileImage");
+	//loop over all nodes with the profileImage classname
+	for (var i = 0; i < avatarImages.length; i++) {
+		avatarImages[i].src= 'users/avatars/'+userInfo.avatar;
+
+	}
+};
+
+function uploadNewAvatar() {
+
+		var imageToUpload = document.getElementById('avatarFile');
+
+		if (imageToUpload.files.length === 0) {
+			alert("You must first select an image to be your new avatar.");
+			return;
+		}
+		var imageFile = imageToUpload.files[0];
+
+		var fileExtension = imageFile.name.split('.');
+		fileExtension = fileExtension[fileExtension.length-1];
+
+		var fileSize = imageFile.size;
+
+		//check filesize is less than 5MB
+		if ( (fileExtension === "png" || fileExtension === "jpg") && fileSize < 5000000){
+			var uploadIds = fileUploader.upload(imageToUpload);
+		} else {
+			imageToUpload.value = "";
+			alert("Invalid file selected. Avatars must be either .png or .jpg and less than 5MB.");
+			return;
+		}
+
+		// if (imageToUpload is not null && imageFiletype === "png") {
+
+		// } else if (imageUpload is null) {
+		// 	alert("Select an image to upload");
+		// 	//clear image selection;
+		// } else if (imageType is ! png) {
+		// 	alert("Avatar must be a png file");
+		// }
+}

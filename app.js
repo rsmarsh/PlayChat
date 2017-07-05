@@ -1,9 +1,15 @@
+"use strict";
+
 var express = require('express');
 var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
+var SocketIOFile = require('socket.io-file');
 
-var utils = require('./utils');
+//local libs
+var databaseComms = require('./private/dbComms');
+var utils = require('./private/utils');
+var socketIOAuth = require('./private/socketio-auth');
 
 
 
@@ -16,6 +22,20 @@ app.get('/', function(req, res) {
 	res.sendFile(__dirname + '/index.html');
 
 });
+
+// app.post('/image-upload', upload.single('formImage'), function(req, res) {
+// 	console.log("received image upload");
+// 	fs.readFile(req.file.path, function(err, data){ 
+// 		console.log("reading file");
+// 		var randomFileName = "avatar-" + Date.now().toString(); 
+// 		var imagePath = __dirname + '/public/users/avatars/'+randomFileName+'.png';
+// 		fs.writeFile(imagePath, data, function(err) {
+// 			res.end('upload successful');
+// 			console.log("writefile completed, callback event now?");
+// 		});
+
+// 	});
+// })
 
 app.use(express.static('public'));
 
@@ -32,16 +52,57 @@ server.listen(port, function() {
 
 io.on('connection', function (socket) {
 
+	var uploader = new SocketIOFile(socket,  {
+		uploadDir: 'public/users/avatars',
+		accepts: ['image/png', 'image/jpeg'],
+		maxFileSize: 5000000,
+		chunkSize: 10240,
+		transmissionDelay: 0,
+		overwrite: false
+	});
+
+	uploader.on('start', (fileInfo) => {
+		console.log('Start uploading');
+		console.log(fileInfo);
+	});
+	uploader.on('stream', (fileInfo) => {
+		console.log(`${fileInfo.wrote} / ${fileInfo.size} byte(s)`);
+	});
+	uploader.on('complete', (fileInfo) => {
+		console.log('Upload Complete.');
+		console.log(fileInfo);
+		socket.avatar = fileInfo.name;
+		socket.emit('newAvatarUploaded',socket.avatar);
+	});
+	uploader.on('error', (err) => {
+		console.log('Error!', err);
+	});
+	uploader.on('abort', (fileInfo) => {
+		console.log('Aborted: ', fileInfo);
+	});
+
+
+
+	
+	// console.log(socket.handshake.headers.cookie);
 	totalUsers+=1;
 	currentActiveUsers+=1;
 	console.log("new connection");
 	socket.username = 'guest'+totalUsers;
-	
+
+	if (typeof socket.avatar === 'undefined') {
+		socket.avatar = "default.png";
+	}
+
 	var userCountUpdate = {
 		currentActiveUsers: currentActiveUsers,
 		totalUsers: totalUsers
 	};
-	
+
+	//send the username only to the newly connected user
+	socket.emit('usernameToDisplay', socket.username);
+
+	//inform all users of a new connection
 	io.emit('totalUsersUpdate', userCountUpdate);
 
 	socket.on('disconnect', function () {
@@ -54,6 +115,7 @@ io.on('connection', function (socket) {
 
 		usernameList[this.id] = newUsername;
 		this.username = newUsername;
+		socket.emit('usernameToDisplay', this.username);
 
 	});
 
@@ -74,7 +136,7 @@ io.on('connection', function (socket) {
 	//text message from clients
 	socket.on('chatMessage', function (message) {
 		
-		io.emit('newMessage', message, this.username);
+		io.emit('newMessage', message, this.username, this.avatar);
 
 	});
 
