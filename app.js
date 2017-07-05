@@ -7,7 +7,7 @@ var io = require('socket.io')(server);
 var SocketIOFile = require('socket.io-file');
 
 //local libs
-var databaseComms = require('./private/dbComms');
+//var databaseComms = require('./private/dbComms');
 var utils = require('./private/utils');
 var socketIOAuth = require('./private/socketio-auth');
 
