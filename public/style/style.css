@@ -1,12 +1,49 @@
+body {
+	background: #ebfcfe;
+	
+}
+
+#mainProfileAvatar {
+	margin-left: 1em;
+	margin-right: 1em;
+
+	float: left;
+
+}
+
+#welcomeMessage {
+
+	
+	
+}
+
 #chatList {
-	background-color: silver;
+	background-color: #ebebeb;
 	border-style: solid;
 	border-color: black;
-	overflow-y:auto;
+	overflow-y: auto;
 	height: 50vh;
 	list-style-type: none;
 	padding: 0;
 	margin: 0;
+	word-wrap: break-word;
+	word-break: break-all;
+}
+
+#userHistoryList {
+	margin-left: 1em;
+	margin-right: 1em;
+	float: right;
+	border-width: 1px black;
+	overflow-y: auto;
+	height: 50vh;
+
+	
+}
+
+#chatDiv {
+	border: 1px solid black;
+
 }
 
 .messageImg {
@@ -15,8 +52,11 @@
 	max-height: 100%;
 	max-width: 40px;
 	max-height: 40px;
-	
+}
 
+#chat-input-box {
+	margin: 0.5em;
+	width: 98%;
 }
 
 .chatMessage {
@@ -24,7 +64,7 @@
 	padding-bottom: 0.1em;
 	background-color: white;	
 	display: block;
-	height: 2.5em;
+	height: auto;
 	line-height: 2.5em;
 
 
@@ -53,7 +93,7 @@
     top: 0;
     width: 100%; /* Full width */
     height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
+    overflow-y: auto; /* Enable scroll if needed */
     background-color: rgb(0,0,0); /* Fallback color */
     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }
@@ -75,12 +115,7 @@
     font-weight: bold;
 }
 
-#userHistoryList {
-	margin-left: 1em;
-	margin-right: 1em;
-	float: right;
-	border-width: 1px black;
-}
+
 
 .close:hover,
 .close:focus {

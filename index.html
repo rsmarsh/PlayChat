@@ -8,40 +8,38 @@
 
 <body onload="prepareHandlers()">
 
-<div id="chatDiv">
-	<div id="userHistoryList">
-	</div>
-	<ul id="chatList">
-		
-	</ul>
-</div>
-
-<div id="InputForm">
-	<input type="text" id="input-box" placeholder="Type your message here..."/>
-	<button id="send-button" onclick="sendMessage()">Send</button>
-</div>
-
-<div id = "InputForm">
-	<input type="text" id="username-box" placeholder="Enter a username"/>
-	<button id="username-button" onclick="changeUsername()">Change</button>
-	
-</div>
-
 <div id="profileBox">
 	<img class="profileImage smallImage" id="mainProfileAvatar" src="users/avatars/default.png"/>
 
-	<h2>Welcome <span id="usernameDisplay"></span></h2>
+	<h2 id="welcomeMessage">Welcome to ChatterPlay <span class="usernameDisplay"></span>!</h2>
 
-	<button id="openAvatarUploadMenu">Upload Avatar</button>
+	<button id="openAvatarUploadMenu">Modify Your Profile</button>
 
 </div>
 
 
 <div>
 	
-	<h3>Currently active users: <span id="activeUserCount"></span></h3>
-	<h3>Total users since launch: <span id="totalUserCount"></span></h3>
+	<h3>Currently active users: <span id="activeUserCount"></span>. Total users since launch: <span id="totalUserCount"></span>.</h3>
 </div>
+
+<div id="chatDiv">
+	<div id="userHistoryList">
+	</div>
+	<ul id="chatList">
+		
+	</ul>
+	<div id="chatInputForm">
+		<input type="text" id="chat-input-box" placeholder="Type your message here..."/>
+		<!-- <button id="send-button" onclick="sendMessage()">Send</button> -->
+	</div>
+</div>
+
+
+
+
+
+
 
 
 
@@ -49,16 +47,20 @@
 <!-- modal popup avatar uploader -->
 <div id="uploadPopUp" class="modalContent">
 
-	<div class="modalDiv">
+		<div id="usernameInputForm" class="modalDiv">
 		<span class="close">&times;</span>
+		<h2><span class="usernameDisplay"></span></h2>
 		<img class="profileImage largeImage"/></br>
 		<form id="imageUploadForm">
 		<input type="file" name="formImage" id="avatarFile"> <button type="submit">Upload</button>
 		</form>
 		<p>Drag and drop an image here or click the upload button.</p>
 		<p>Your avatar will be 128x128 pixels in size.</p>
-
+		<input type="text" id="username-input-box" placeholder="Change username"/>
+		<!-- <button id="username-button" onclick="changeUsername()">Change</button> --> 
+	
 	</div>
+	
 	
 </div>
 

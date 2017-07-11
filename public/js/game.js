@@ -10,7 +10,7 @@ var userInfo = {
 };
 
 function prepareHandlers() {
-	var textInput = document.getElementById('input-box');
+	var textInput = document.getElementById('chat-input-box');
 	textInput.addEventListener("keypress", function(e) {
 		//if the enter key was pressed
 		if (e.keyCode == 13){
@@ -19,7 +19,7 @@ function prepareHandlers() {
 
 	});
 
-	var usernameInput = document.getElementById('username-box');
+	var usernameInput = document.getElementById('username-input-box');
 	usernameInput.addEventListener("keypress", function(e) {
 		
 		//if the enter key was pressed
@@ -91,7 +91,7 @@ function updateUserHistory(userList) {
 function sendMessage() {
 	
 
-	var textInput = document.getElementById('input-box');
+	var textInput = document.getElementById('chat-input-box');
 	var message = textInput.value;
 
 
@@ -104,7 +104,7 @@ function sendMessage() {
 };
 
 function changeUsername() {
-	var newUsername = document.getElementById('username-box');
+	var newUsername = document.getElementById('username-input-box');
 	if (newUsername.value !== "") {
 		sendUsernameToServer(newUsername.value);
 		newUsername.value = "";
@@ -114,8 +114,10 @@ function changeUsername() {
 
 function changeDisplayedUsername(newUsername) {
 	userInfo.username = newUsername;
-	var usernameDisplayed = document.getElementById('usernameDisplay');
-	usernameDisplayed.innerHTML = userInfo.username;
+	var usernameDisplayed = document.getElementsByClassName('usernameDisplay');
+	for (var i = 0; i < usernameDisplayed.length; i++) {
+		usernameDisplayed[i].innerHTML = userInfo.username;
+	}
 };
 
 //new message from server
