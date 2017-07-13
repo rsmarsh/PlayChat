@@ -63,6 +63,7 @@ io.on('connection', function (socket) {
 	});
 
 	uploader.on('start', (fileInfo) => {
+		
 		console.log('Start uploading');
 		console.log(fileInfo);
 	});
@@ -77,13 +78,11 @@ io.on('connection', function (socket) {
 	});
 	uploader.on('error', (err) => {
 		console.log('Error!', err);
+		socket.emit('userError', 'Sorry, avatar upload failed, please check that it meets the requirements');
 	});
 	uploader.on('abort', (fileInfo) => {
 		console.log('Aborted: ', fileInfo);
 	});
-
-
-
 	
 	// console.log(socket.handshake.headers.cookie);
 	totalUsers+=1;
@@ -92,8 +91,6 @@ io.on('connection', function (socket) {
 	socket.username = 'guest'+totalUsers;
 	usernameList[socket.id] = socket.username;
 	publicUserList.push(socket.username);
-
-
 
 
 	if (typeof socket.avatar === 'undefined') {
@@ -118,18 +115,25 @@ io.on('connection', function (socket) {
 		console.log(socket.username+" disconnected");
 		publicUserList.splice(publicUserList.indexOf(socket.username), 1);
 		currentActiveUsers-=1;
+		io.emit('userDisconnected', socket.username);
 		io.emit('totalUsersUpdate', currentActiveUsers);
-		io.emit('userHistory', publicUserList);
+		//io.emit('userHistory', publicUserList);
 	});
 	
 	socket.on('editUsername', function (newUsername) {
 
-		usernameList[socket.id] = newUsername;
-		publicUserList[publicUserList.indexOf(socket.username)] = newUsername;
-		socket.username = newUsername;
+		if (usernameIsUnique(newUsername)) {
 
-		socket.emit('usernameToDisplay', socket.username);
-		io.emit('userHistory', publicUserList);
+			usernameList[socket.id] = newUsername;
+			publicUserList[publicUserList.indexOf(socket.username)] = newUsername;
+			socket.username = newUsername;
+
+			socket.emit('usernameToDisplay', socket.username);
+			io.emit('userHistory', publicUserList);
+
+		} else {
+			socket.emit('userError', 'Sorry, \''+newUsername+'\' has already been taken.');
+		}
 
 	});
 
@@ -155,4 +159,12 @@ io.on('connection', function (socket) {
 	});
 
 });
+
+var usernameIsUnique = function(username) {
+	if (publicUserList.includes(username)) {
+		return false;
+	} else {
+		return true;
+	}
+};
 

@@ -76,7 +76,7 @@ function updateUserHistory(userList) {
 		var userListHTML = '<h2>Users in the chat:</h2>';
 		userListHTML += '<ul>';
 		for (var i = 0; i < userList.length; i++) {
-			userListHTML += '<li>';
+			userListHTML += '<li class=\'usersListOnline\'>';
 			userListHTML += userList[i]; 
 			userListHTML += '</li>';
 		}
@@ -85,6 +85,16 @@ function updateUserHistory(userList) {
 	
 		userHistoryList.innerHTML = userListHTML;
 };
+
+function removeUserFromHistory(username) {
+	var onlineUsersArr = document.getElementsByClassName('usersListOnline');
+	for (var i = 0; i < onlineUsersArr.length; i++) {
+		if (onlineUsersArr[i].innerHTML === username) {
+			onlineUsersArr[i].classList.add('usersListOffline');
+			onlineUsersArr[i].classList.remove('usersListOnline');
+		}
+	}
+}
 
 
 
@@ -134,7 +144,7 @@ function newMessageFromServer(message, usernameFrom, avatar) {
 function createChatMessage(message, usernameFrom, avatar) {
 
 	var userAvatar = document.createElement("img");
-	userAvatar.className = 'messageImg';
+	userAvatar.classList.add('messageImg');
 	userAvatar.src = 'users/avatars/' + avatar;
 
 	var newMessage = document.createElement("li");
@@ -143,7 +153,7 @@ function createChatMessage(message, usernameFrom, avatar) {
 	var messageContent = usernameFrom += ': ' + message;
 	
 	var textInsert = document.createElement("p");
-	textInsert.className = "chatMessageSpan"; 
+	textInsert.classList.add("chatMessageSpan"); 
 	textInsert.innerHTML = messageContent;
 
 

@@ -19,6 +19,10 @@ socket.on('totalUsersUpdate', function(userCount) {
 	updateTotalUserCount(userCount);
 });
 
+socket.on('userDisconnected', function(username) {
+	removeUserFromHistory(username);
+})
+
 socket.on('userHistory', function(usernameList) {
 	updateUserHistory(usernameList);
 });
@@ -29,6 +33,10 @@ socket.on('usernameToDisplay', function(usernameToDisplay) {
 
 socket.on('newAvatarUploaded', function(newAvatar) {
 	updateAvatar(newAvatar);
+});
+
+socket.on('userError', function(errorMsg) {
+	alert(errorMsg);
 });
 
 fileUploader.on('ready', function() {

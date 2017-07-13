@@ -17,6 +17,14 @@ body {
 	
 }
 
+.usersListOnline {
+ 	color: #1dc90a;
+}
+
+.usersListOffline {
+	color: #ff0000;
+}
+
 #chatList {
 	background-color: #ebebeb;
 	border-style: solid;
