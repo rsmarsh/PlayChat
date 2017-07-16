@@ -15,7 +15,7 @@ var socketIOAuth = require('./private/socketio-auth');
 
 
 var usernameList = {};
-var publicUserList = [];
+// var publicUserList = [];
 var totalUsers = 0;
 var currentActiveUsers = 0;
 
@@ -74,7 +74,9 @@ io.on('connection', function (socket) {
 		console.log('Upload Complete.');
 		console.log(fileInfo);
 		socket.avatar = fileInfo.name;
+		usernameList[socket.id].avatar = fileInfo.name;
 		socket.emit('newAvatarUploaded',socket.avatar);
+		io.emit('userHistory', generatePublicUserList());
 	});
 	uploader.on('error', (err) => {
 		console.log('Error!', err);
@@ -88,14 +90,22 @@ io.on('connection', function (socket) {
 	totalUsers+=1;
 	currentActiveUsers+=1;
 	console.log("new connection");
-	socket.username = 'guest'+totalUsers;
-	usernameList[socket.id] = socket.username;
-	publicUserList.push(socket.username);
-
+	socket.username = 'guest'+totalUsers
 
 	if (typeof socket.avatar === 'undefined') {
 		socket.avatar = "default.png";
 	}
+
+	usernameList[socket.id] = {
+		username: socket.username,
+		online: true,
+		lastOnline: new Date().toGMTString(),
+		avatar: socket.avatar
+
+	};
+	//publicUserList.push(socket.username);
+
+
 
 	var userCountUpdate = {
 		currentActiveUsers: currentActiveUsers,
@@ -108,28 +118,29 @@ io.on('connection', function (socket) {
 	//inform all users of a new connection
 	io.emit('totalUsersUpdate', userCountUpdate);
 
-	//update the user history list to allowe population of the web list
-	io.emit('userHistory', publicUserList);
+	//update the user history list to allow population of the web list
+	io.emit('userHistory', generatePublicUserList());
 
 	socket.on('disconnect', function () {
 		console.log(socket.username+" disconnected");
-		publicUserList.splice(publicUserList.indexOf(socket.username), 1);
+		usernameList[socket.id].online = false,
+		usernameList[socket.id].lastOnline = new Date().toGMTString(),
 		currentActiveUsers-=1;
-		io.emit('userDisconnected', socket.username);
+		io.emit('userHistory', generatePublicUserList());
+		
 		io.emit('totalUsersUpdate', currentActiveUsers);
-		//io.emit('userHistory', publicUserList);
 	});
 	
 	socket.on('editUsername', function (newUsername) {
 
 		if (usernameIsUnique(newUsername)) {
 
-			usernameList[socket.id] = newUsername;
-			publicUserList[publicUserList.indexOf(socket.username)] = newUsername;
+			usernameList[socket.id].username = newUsername;
+			//publicUserList[publicUserList.indexOf(socket.username)] = newUsername;
 			socket.username = newUsername;
 
 			socket.emit('usernameToDisplay', socket.username);
-			io.emit('userHistory', publicUserList);
+			io.emit('userHistory', generatePublicUserList());
 
 		} else {
 			socket.emit('userError', 'Sorry, \''+newUsername+'\' has already been taken.');
@@ -161,10 +172,32 @@ io.on('connection', function (socket) {
 });
 
 var usernameIsUnique = function(username) {
-	if (publicUserList.includes(username)) {
-		return false;
-	} else {
-		return true;
+	//iterate over the username list object, see if the new username matches anyone elses
+	for (var user in usernameList) {
+		if (usernameList[user].username === username) {
+			return false;
+		}
 	}
+
+	return true;
+
+};
+
+
+
+var generatePublicUserList = function() {
+	//populate array with user objects, to not reveal the socket id to all users
+	var publicUserList = [];
+
+	for (var user in usernameList) {
+		publicUserList.push({
+			username: usernameList[user].username,
+			online: usernameList[user].online,
+			lastOnline: usernameList[user].lastOnline,
+			avatar: usernameList[user].avatar
+		});
+
+	}
+	return publicUserList;
 };
 

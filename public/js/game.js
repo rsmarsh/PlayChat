@@ -72,18 +72,34 @@ function updateTotalUserCount(newCount) {
 
 function updateUserHistory(userList) {
 	var userListHTML = '';
-	if (userList.length > 0) {
-		var userListHTML = '<h2>Users in the chat:</h2>';
-		userListHTML += '<ul>';
-		for (var i = 0; i < userList.length; i++) {
-			userListHTML += '<li class=\'usersListOnline\'>';
-			userListHTML += userList[i]; 
-			userListHTML += '</li>';
+	var onlineUsers = '';
+	var offlineUsers = '';
+
+
+	var userListHTML = '<h2>Users in the chat:</h2>';
+	userListHTML += '<ul>';
+	for (var user in userList) {
+
+		var newLine = '<li class=\'usersListOnline'+userList[user].online+' tooltip\'>';
+
+		newLine += '<img class="userlistImg" src="users/avatars/'+userList[user].avatar+'">';
+		newLine += userList[user].username; 
+		newLine += ' <span class="tooltiptext">Last seen online: '+userList[user].lastOnline+'</span>';
+
+		newLine += '</li>';
+
+		if (userList[user].online) {
+			onlineUsers += newLine;
+		} else {
+			offlineUsers += newLine;
 		}
-		userListHTML += '</ul>';
-	} 
-	
-		userHistoryList.innerHTML = userListHTML;
+	}
+	userListHTML += onlineUsers;
+	userListHTML += offlineUsers;
+	userListHTML += '</ul>';
+		
+	userHistoryList.innerHTML = userListHTML;
+
 };
 
 function removeUserFromHistory(username) {
