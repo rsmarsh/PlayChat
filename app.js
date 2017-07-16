@@ -107,16 +107,16 @@ io.on('connection', function (socket) {
 
 
 
-	var userCountUpdate = {
-		currentActiveUsers: currentActiveUsers,
-		totalUsers: totalUsers
-	};
+	
 
 	//send the username only to the newly connected user
 	socket.emit('usernameToDisplay', socket.username);
 
 	//inform all users of a new connection
-	io.emit('totalUsersUpdate', userCountUpdate);
+	io.emit('totalUsersUpdate', {
+		currentActiveUsers: currentActiveUsers,
+		totalUsers: totalUsers
+	});
 
 	//update the user history list to allow population of the web list
 	io.emit('userHistory', generatePublicUserList());
@@ -128,7 +128,10 @@ io.on('connection', function (socket) {
 		currentActiveUsers-=1;
 		io.emit('userHistory', generatePublicUserList());
 		
-		io.emit('totalUsersUpdate', currentActiveUsers);
+		io.emit('totalUsersUpdate', {
+			currentActiveUsers: currentActiveUsers,
+			totalUsers: totalUsers
+		});
 	});
 	
 	socket.on('editUsername', function (newUsername) {
