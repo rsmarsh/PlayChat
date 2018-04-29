@@ -10,7 +10,8 @@ Current features include:
  
 
 ## Operation
-Run the server using 'node app.js', then connect to it with different clients to see a demonstration.  
+First run an 'npm install' to create the node_modules folder locally with all required dependencies. 
+Then run the server using 'node app.js', then connect to the given IP via different clients on the local network to see a demonstration.  
 Games are not currently included with this repo, however they can be placed within the public/apps/ directory, and the index page of that folder will be launched within an iFrame.  
 Avatar uploads will be stored in both the public/users/temp-uploads during upload, and then moved to public/users/avatars when the upload is complete.  
 
