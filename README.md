@@ -27,5 +27,5 @@ The application runs with assistance from the following technologies:
 
 # Credit
 
-Created by Richard Marshall
+Created by Richard Marshall  
 Contact: Richard@live.cl
