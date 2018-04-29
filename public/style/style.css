@@ -165,6 +165,13 @@ body {
 	height: 128px;
 }
 
+#gameiFrame {
+	border: 0px;
+	width: 850px;
+	height: 650px;
+	overflow: hidden;
+}
+
 
 /* Tooltip text */
 .tooltip .tooltiptext {

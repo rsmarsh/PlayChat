@@ -3,6 +3,7 @@ var chatList = document.getElementById('chatList');
 var activeUsers = document.getElementById('activeUserCount');
 var totalUsers = document.getElementById('totalUserCount');
 var avatarUploadMenu = document.getElementById('uploadPopUp');
+var gameArea = document.getElementById('gameArea');
 
 var userInfo = {
 	username: '',
@@ -231,4 +232,14 @@ function uploadNewAvatar() {
 		// } else if (imageType is ! png) {
 		// 	alert("Avatar must be a png file");
 		// }
-}
+};
+
+function prepareGame(gameName) {
+	initiateGameOnServer(gameName);
+};
+
+function launchGame(gameName) {
+	console.log("launching "+gameName);
+	gameArea.innerHTML = '<iframe id="gameiFrame" src="/apps/'+gameName+'/index.html">';
+
+};

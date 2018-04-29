@@ -172,6 +172,18 @@ io.on('connection', function (socket) {
 
 	});
 
+
+	///////////GAMES//////////////
+	socket.on('loadgame', function(gameName) {
+
+		switch(gameName) {
+			case 'battleship':
+				require('./private/apps/battleship-io')(socket, io.sockets.adapter.rooms);
+				socket.emit('launchGame', 'battleship');
+				break;
+		}
+	});
+
 });
 
 var usernameIsUnique = function(username) {

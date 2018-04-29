@@ -10,6 +10,10 @@ function sendUsernameToServer(username) {
 	socket.emit('editUsername', username);
 };
 
+function initiateGameOnServer(gameName){
+	socket.emit('loadgame', gameName);
+};
+
 //split into an object
 socket.on('newMessage', function(message, usernameFrom, avatar) {
 	newMessageFromServer(message, usernameFrom, avatar);
@@ -37,6 +41,11 @@ socket.on('newAvatarUploaded', function(newAvatar) {
 
 socket.on('userError', function(errorMsg) {
 	alert(errorMsg);
+});
+
+/////////////GAMES//////////////
+socket.on('launchGame', function(gameName) {
+	launchGame(gameName);
 });
 
 fileUploader.on('ready', function() {
