@@ -1,6 +1,8 @@
 Work-in-progress project of a chat room, which allows users to launch and invite others to browser-based games.  
 This is a single page application running on a NodeJS Express server, using web sockets for all communication between users.  
 
+See a live demo [here]: http://chatterplay.herokuapp.com, hosted on Heroku (app may take a moment to boot)
+
 Current features include:  
 * Profile creation
 * Avatar uploads
